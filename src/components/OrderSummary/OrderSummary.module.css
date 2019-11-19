@@ -1,0 +1,11 @@
+.OrderSummary {
+  text-transform: capitalize;
+  background-color: khaki;
+}
+
+.OrderSummary p {
+  color:blue;
+}
+.OrderSummary h3 {
+  color:blue;
+}
