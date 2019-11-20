@@ -11,7 +11,6 @@ const ordersummary = props => {
       </li>
     );
   });
-  console.log(classes.OrderSummary);
 
   return (
     <Aux className={classes.OrderSummary}>
