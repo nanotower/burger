@@ -4,6 +4,9 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/OrderSummary/OrderSummary';
+import axios from '../../services/orders';
+import Preloader from '../../components/UI/Preloader/Preloader';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 const INGREDIENTS_PRICES = {
   salad: 0.4,
@@ -12,17 +15,26 @@ const INGREDIENTS_PRICES = {
   meat: 1.4
 }
 
-export default class BurgerBuilder extends Component {
+class BurgerBuilder extends Component {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 0,
     purchaseable: false,
-    purchasing: false
+    purchasing: false,
+    loading: false,
+    error: false
+  }
+
+  componentDidMount() {
+    axios.get('https://react-burger-exercise-94473.firebaseio.com/ingredients.json')
+    .then( response => {
+      this.setState({
+        ingredients: response.data
+      })
+    })
+    .catch(err =>{
+      this.setState({error: true})
+    })
   }
 
   purchaseHandler = () => {
@@ -32,12 +44,23 @@ export default class BurgerBuilder extends Component {
   }
 
   purchaseCancelHandler = () => {
-    console.log("hand")
     this.setState({purchasing: false})
   }
 
   purchaseContinueHandler = () => {
-    alert('continue')
+    this.setState({loading: true});
+    const order = {
+      ingredients: this.state.ingredients,
+      price: this.state.price,
+      user: {
+        name: "Fer",
+        address: "teststreet"
+      },
+      delivery: "fastest"
+    }
+    axios.post('/orders.json', order)
+    .then( response => this.setState({loading: false, purchasing: false}))
+    .catch( err => this.setState({loading: false, purchasing: false}))
   }
 
   updatePurchaseState = (updateIngredients) =>{
@@ -93,27 +116,46 @@ export default class BurgerBuilder extends Component {
     for(let ingredients in disabledInfo) { 
       disabledInfo[ingredients] = disabledInfo[ingredients] <= 0
     }
+    let orderSummary = null;
+   
+    let burger = this.state.error? <p>Ther´s a problem with the data request</p> : <Preloader />
+    if(this.state.ingredients) {
+      burger = (  
+      <Aux>
+      <Burger ingredients={this.state.ingredients} />
+      <BuildControls
+        ingredientAdded={this.addIngredientHandler}
+        ingredientRemoved={this.removeIngredientHandler}
+        disabled={disabledInfo}
+        totalPrice={this.state.totalPrice}
+        purchaseable={this.state.purchaseable}
+        purchase={this.purchaseHandler}
+      />
+      </Aux>);
+       orderSummary = 
+       <OrderSummary 
+       ingredients={this.state.ingredients}
+       cancel={this.purchaseCancelHandler}
+       continue={this.purchaseContinueHandler}
+       totalPrice={this.state.totalPrice}
+       />
+    }
+
+    if(this.state.loading) {
+      orderSummary= <Preloader /> 
+    }
+    
 
     return (
       <Aux>
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-          <OrderSummary 
-          ingredients={this.state.ingredients}
-          cancel={this.purchaseCancelHandler}
-          continue={this.purchaseContinueHandler}
-          totalPrice={this.state.totalPrice}
-          ></OrderSummary>
+          {orderSummary}
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls
-          ingredientAdded={this.addIngredientHandler}
-          ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          totalPrice={this.state.totalPrice}
-          purchaseable={this.state.purchaseable}
-          purchase={this.purchaseHandler}
-        ></BuildControls>
+        {burger}
+      
       </Aux>
     );
   }
 }
+
+export default withErrorHandler(BurgerBuilder, axios);
