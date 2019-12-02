@@ -18,7 +18,7 @@ const INGREDIENTS_PRICES = {
 class BurgerBuilder extends Component {
   state = {
     ingredients: null,
-    totalPrice: 0,
+    totalPrice: 4,
     purchaseable: false,
     purchasing: false,
     loading: false,
@@ -47,20 +47,27 @@ class BurgerBuilder extends Component {
     this.setState({purchasing: false})
   }
 
-  purchaseContinueHandler = () => {
-    this.setState({loading: true});
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.price,
-      user: {
-        name: "Fer",
-        address: "teststreet"
-      },
-      delivery: "fastest"
-    }
-    axios.post('/orders.json', order)
-    .then( response => this.setState({loading: false, purchasing: false}))
-    .catch( err => this.setState({loading: false, purchasing: false}))
+  purchaseContinueHandler = (ingredients) => {
+    // this.setState({loading: true});
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.price,
+    //   user: {
+    //     name: "Fer",
+    //     address: "teststreet"
+    //   },
+    //   delivery: "fastest"
+    // }
+    // axios.post('/orders.json', order)
+    // .then( response => this.setState({loading: false, purchasing: false}))
+    // .catch( err => this.setState({loading: false, purchasing: false}))
+
+    let selectedIngredients = []
+    Object.keys(ingredients).forEach(ingredient => {
+      selectedIngredients.push(`${ingredient}=${ingredients[ingredient]}`)
+    });
+    console.log(selectedIngredients.join('&'))
+    this.props.history.push(`/checkout?${selectedIngredients.join('&')}`);
   }
 
   updatePurchaseState = (updateIngredients) =>{

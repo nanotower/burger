@@ -3,7 +3,7 @@ import Aux from "../../hoc/Aux";
 import classes from "./OrderSummary.module.css";
 import Button from "../UI/Button/Button";
 
-const ordersummary = props => {
+const ordersummary = (props) => {
   const ingredientsList = Object.keys(props.ingredients).map(ingredient => {
     return (
       <li key={ingredient}>
@@ -23,7 +23,7 @@ const ordersummary = props => {
       <Button btnType="Danger" clicked={props.cancel}>
         Cancel
       </Button>
-      <Button btnType="Success" clicked={props.continue}>
+      <Button btnType="Success" clicked={() => props.continue(props.ingredients)}>
         Proceed
       </Button>
     </Aux>
