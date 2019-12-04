@@ -64,10 +64,13 @@ class BurgerBuilder extends Component {
 
     let selectedIngredients = []
     Object.keys(ingredients).forEach(ingredient => {
-      selectedIngredients.push(`${ingredient}=${ingredients[ingredient]}`)
+      selectedIngredients.push(`${encodeURIComponent(ingredient)}=${encodeURIComponent(ingredients[ingredient])}`)
     });
-    console.log(selectedIngredients.join('&'))
-    this.props.history.push(`/checkout?${selectedIngredients.join('&')}`);
+    const queryString = selectedIngredients.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString
+    })
   }
 
   updatePurchaseState = (updateIngredients) =>{
