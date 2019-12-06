@@ -13,7 +13,7 @@ export default class Checkout extends Component {
     },
     totalPrice: 0
   };
-  componentDidMount() {
+  componentWillMount() {
     let ingredientsOrdered = {};
     const query = new URLSearchParams(this.props.location.search);
     let price = 0;
@@ -47,9 +47,11 @@ export default class Checkout extends Component {
         />
         <Route
           path={this.props.match.path + "/contact"}
-          render={() => <ContactData 
+          render={(props) => <ContactData 
           ingredients={this.state.ingredients} 
-          price={this.state.totalPrice}/>}
+          price={this.state.totalPrice}
+          {...props}
+          />}
         />
       </div>
     );
