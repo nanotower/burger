@@ -54,6 +54,7 @@ export default class ContactData extends Component {
           ], 
         },
         validation: {required: false},
+        valid: true,
         value: "fastest"
       }
     },
@@ -105,7 +106,7 @@ export default class ContactData extends Component {
     let formIsValid = true;
     for(let elemId in updatedOrderForm) {
       formIsValid = updatedOrderForm[elemId].valid && formIsValid;
-      console.log(formIsValid, updatedOrderForm[elemId], formIsValid)
+      console.log(formIsValid, updatedOrderForm[elemId])
     }
     updatedOrderElement.touched = true;
     updatedOrderForm[eventId] = updatedOrderElement;
@@ -122,7 +123,7 @@ export default class ContactData extends Component {
         config: this.state.orderForm[key]
       })
     }
-    console.log(formElemArr)
+
     let form = (
       <form onSubmit={this.orderHandler}>
         {formElemArr.map(e => 
