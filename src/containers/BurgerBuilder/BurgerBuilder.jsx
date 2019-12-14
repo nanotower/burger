@@ -12,25 +12,10 @@ import { connect } from 'react-redux';
 
 class BurgerBuilder extends Component {
   state = {
-    // ingredients: null,
-    // totalPrice: 4,
-    // purchaseable: false,
     purchasing: false,
     loading: false,
     error: false
   }
-
-  // componentDidMount() {
-  //   axios.get('https://react-burger-exercise-94473.firebaseio.com/ingredients.json')
-  //   .then( response => {
-  //     this.setState({
-  //       ingredients: response.data
-  //     })
-  //   })
-  //   .catch(err =>{
-  //     this.setState({error: true})
-  //   })
-  // }
 
   purchaseHandler = () => {
     this.setState({
@@ -43,16 +28,9 @@ class BurgerBuilder extends Component {
   }
 
   purchaseContinueHandler = () => {
-    // let selectedIngredients = []
-    // Object.keys(ingredients).forEach(ingredient => {
-    //   selectedIngredients.push(`${encodeURIComponent(ingredient)}=${encodeURIComponent(ingredients[ingredient])}`)
-    // });
-    // selectedIngredients.push('price=' + this.state.price)
-    // const queryString = selectedIngredients.join('&');
-
+   
     this.props.history.push({
       pathname: '/checkout',
-      // search: '?' + queryString
     })
   }
 
@@ -61,43 +39,6 @@ class BurgerBuilder extends Component {
     const totalSum = totalIngredients.reduce((ac, av)=>{ return ac+av}, 0);
     return totalSum>0;
   } 
-
-  // addIngredientHandler = type => {
-  //   const oldIngredientCount = this.state.ingredients[type];
-  //   const newIngredientCount = oldIngredientCount +1;
-  //   const updateIngredients = {
-  //     ...this.state.ingredients
-  //   };
-  //   updateIngredients[type] = newIngredientCount;
-  //   const priceSum = INGREDIENTS_PRICES[type];
-  //   const oldPrice = this.state.price;
-  //   const newPrice = oldPrice + priceSum;
-  //   this.setState({
-  //     ingredients: updateIngredients,
-  //     totalPrice: newPrice
-  //   })
-  //   this.updatePurchaseState(updateIngredients)
-  // }
-
-  // removeIngredientHandler = type => {
-  //   const oldIngredientCount = this.state.ingredients[type];
-  //   if(oldIngredientCount <= 0) {
-  //     return 
-  //   }
-  //   const newIngredientCount = oldIngredientCount -1;
-  //   const updateIngredients = {
-  //     ...this.state.ingredients
-  //   };
-  //   updateIngredients[type] = newIngredientCount;
-  //   const priceSum = INGREDIENTS_PRICES[type];
-  //   const oldPrice = this.state.price;
-  //   const newPrice = oldPrice - priceSum;
-  //   this.setState({
-  //     ingredients: updateIngredients,
-  //     totalPrice: newPrice
-  //   })
-  //   this.updatePurchaseState(updateIngredients)
-  // }
 
   render() {
     const disabledInfo = {
